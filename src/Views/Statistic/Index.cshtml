@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewData["Title"] = "Status";
+    Layout = "_Layout";
+}
+
+<h2>Das sind die Faulsten der Faulen</h2>
+
+<img src="~/images/sloth.gif" style="width: 275px;" />
+
+<div id="userList" style="width: 50%;">
+    @await Component.InvokeAsync("UserList")
+</div>
+
+<p><a asp-controller="Mic" class="btn btn-danger" role="button">Mikro umschalten <span class="glyphicon glyphicon-volume-up"></span></a> <a asp-controller="Statistic" class="btn btn-success" role="button">Aktualisieren <span class="glyphicon glyphicon-refresh"></span></a></p>
+

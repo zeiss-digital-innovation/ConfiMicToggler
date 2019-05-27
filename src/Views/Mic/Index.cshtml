@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "SkypeMicToggler";
+    Layout = "_Layout";
+}
+
+<h2>@User.Identity.Name ist zu faul zum Aufstehen...</h2>
+
+<img src="~/images/faultier.jpg" style="width: 275px;"/>
+
+<p>Außer dir waren außerdem heute schon faul:</p>
+<ul></ul>
+
+<div id="userList" style="width: 50%;">
+    @await Component.InvokeAsync("UserList")
+    <a asp-controller="Mic" class="btn btn-danger" role="button">Mikro umschalten <span class="glyphicon glyphicon-volume-up"></span></a> <a asp-controller="Statistic" class="btn btn-success" role="button">Zur Statistik...</a>
+</div>

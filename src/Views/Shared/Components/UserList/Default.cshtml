@@ -1,0 +1,18 @@
+﻿@model Dictionary<string, int>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Benutzer</th>
+            <th>Anzahl</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.OrderByDescending(x => x.Value))
+        {
+            <tr>
+                <td>@user.Key</td>
+                <td>@user.Value</td>
+            </tr>
+        }
+    </tbody>
+</table>
