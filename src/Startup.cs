@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ConfiMicToggler.Config;
+using ConfiMicToggler.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SkypeMicToggler.Config;
 
-namespace SkypeMicToggler
+namespace ConfiMicToggler
 {
     public class Startup
     {
@@ -24,8 +20,8 @@ namespace SkypeMicToggler
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSingleton<UserStore>();
-            services.Configure<SkypeMicTogglerConfig>(Configuration.GetSection("SkypeMicTogglerConfig").Bind);
+            services.AddSingleton<StatisticData>();
+            services.Configure<ConfiMicTogglerConfig>(Configuration.GetSection("ConfiMicTogglerConfig").Bind);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

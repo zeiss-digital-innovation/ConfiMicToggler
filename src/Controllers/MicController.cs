@@ -4,17 +4,17 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using WindowsInput;
 using WindowsInput.Native;
-using Microsoft.AspNetCore.Authorization;
+using ConfiMicToggler.Config;
+using ConfiMicToggler.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using SkypeMicToggler.Config;
 
-namespace SkypeMicToggler.Controllers
+namespace ConfiMicToggler.Controllers
 {
     public class MicController : Controller
     {
-        private readonly UserStore _userStore;
-        private readonly SkypeMicTogglerConfig _config;
+        private readonly StatisticData _statisticData;
+        private readonly ConfiMicTogglerConfig _config;
 
         [DllImport("USER32.DLL", CharSet = CharSet.Unicode)]
         public static extern IntPtr FindWindow(String lpClassName, String lpWindowName);
@@ -33,13 +33,22 @@ namespace SkypeMicToggler.Controllers
         [DllImport("USER32.DLL")]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        public MicController(UserStore userStore, IOptions<SkypeMicTogglerConfig> config)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MicController"/> class.
+        /// </summary>
+        /// <param name="statisticData">The user store.</param>
+        /// <param name="config">The configuration.</param>
+        public MicController(StatisticData statisticData, IOptions<ConfiMicTogglerConfig> config)
         {
-            _userStore = userStore;
+            _statisticData = statisticData;
             _config = config.Value;
         }
 
-        // GET
+
+        /// <summary>
+        /// Toggles the microfon of the configured conference tool and returns the index page
+        /// </summary>
+        /// <returns>The index page with statistics who used the mic toggler</returns>
         public IActionResult Index()
         {
             IntPtr targetWindowHandle = IntPtr.Zero;
@@ -64,10 +73,22 @@ namespace SkypeMicToggler.Controllers
                 InputSimulator inputSimulator = new InputSimulator();
                 keysToPress(inputSimulator.Keyboard);
 
-                _userStore.Add(this.User);
+                _statisticData.AddLazyUserCounter(this.User);
             }
 
-            return View(_userStore);
+            return View(_statisticData);
+        }
+
+        private static void BringConferenceWindowToFront(IntPtr conferenceWindow)
+        {
+            // Verify that Skype is a running process.
+            if (conferenceWindow == IntPtr.Zero)
+            {
+                return;
+            }
+
+            // Make Skype the foreground application
+            SetForegroundWindow(conferenceWindow);
         }
 
         private IntPtr GetWindowHandleForSkype()
@@ -86,18 +107,6 @@ namespace SkypeMicToggler.Controllers
             }
 
             return windowHandle;
-        }
-
-        public static void BringConferenceWindowToFront(IntPtr conferenceWindow)
-        {
-            // Verify that Skype is a running process.
-            if (conferenceWindow == IntPtr.Zero)
-            {
-                return;
-            }
-
-            // Make Skype the foreground application
-            SetForegroundWindow(conferenceWindow);
         }
     }
 }

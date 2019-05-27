@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using ConfiMicToggler.Config;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.HttpSys;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using SkypeMicToggler.Config;
 
-namespace SkypeMicToggler
+namespace ConfiMicToggler
 {
     public class Program
     {
@@ -23,7 +19,7 @@ namespace SkypeMicToggler
                 .AddJsonFile("appsettings.json");
             Configuration = builder.Build();
 
-            var skypeConfig = Configuration.GetSection("SkypeMicTogglerConfig").Get<SkypeMicTogglerConfig>();
+            var skypeConfig = Configuration.GetSection("ConfiMicTogglerConfig").Get<ConfiMicTogglerConfig>();
             var hostName = skypeConfig.Host;
             var port = skypeConfig.Port;
 
@@ -41,7 +37,20 @@ namespace SkypeMicToggler
 
             Console.ForegroundColor = ConsoleColor.White;
 
-            BuildWebHost(args, hostName, port).Run();
+            try
+            {
+                BuildWebHost(args, hostName, port).Run();
+            }
+            catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Whoops, some error occured, while starting the conference mic toggler\n: {e}");
+
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine($"Press any key to continue...");
+
+                Console.ReadKey();
+            }
         }
 
         public static IWebHost BuildWebHost(string[] args, string host, string port) =>
