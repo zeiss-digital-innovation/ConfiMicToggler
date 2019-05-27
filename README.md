@@ -1,3 +1,5 @@
+![alt text](https://github.com/saxsys/ConfiMicToggler/blob/master/src/wwwroot/images/faultier.jpg?raw=true "For lazy people")
+
 # ConfiMicToggler
 
 The ConfiMicToggler aka the Conference Microfon Toggler, is a tool for lazy people which uses Skype for Business or Microsoft Teams for video conferencing in a distributed team.
